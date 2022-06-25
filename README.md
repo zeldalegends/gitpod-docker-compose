@@ -2,8 +2,6 @@
 
 This is a [Docker Compose](https://docs.docker.com/compose/) template configured for ephemeral development environments on [Gitpod](https://www.gitpod.io/).
 
-[Source](https://github.com/gitpod-io/template-docker-compose)
-
 ## Next Steps
 
 Click the button below to start a new development environment:
