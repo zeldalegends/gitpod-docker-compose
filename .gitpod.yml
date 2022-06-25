@@ -2,20 +2,14 @@ tasks:
   - init: |
       docker-compose pull
   - command: |
-      docker-compose up
+      docker-compose up -d
 
 
 ports:
-  - port: 5000
-    onOpen: ignore
-  - port: 5601
+  - port: 1880
     onOpen: open-browser
   - port: 9200
     onOpen: open-preview
-  - port: 9300
-    onOpen: ignore
-  - port: 9600
-    onOpen: ignore
 
 vscode:
   extensions:
