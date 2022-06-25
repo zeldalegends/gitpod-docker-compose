@@ -3,6 +3,7 @@ version: "3"
 services:
   orion:
     image: fiware/orion:2.5.2
+    container_name: fiware-orion
     ports:
       - 11026:1026
     depends_on:
@@ -11,6 +12,7 @@ services:
 
   orion-ld:
     image: fiware/orion-ld:0.6.1
+    container_name: fiware-orion-ld
     ports:
       - 1026:1026
     depends_on:
@@ -19,6 +21,7 @@ services:
 
   mongo:
     image: mongo:3.6
+    container_name: fiware-mongo
     command: --nojournal
     volumes:
       - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
@@ -26,6 +29,7 @@ services:
   node-red:
     build: ./node-red
     image: fiware/node-red
+    container_name: fiware-node-red
     ports:
       - 1880:1880
     depends_on:
