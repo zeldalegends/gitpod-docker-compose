@@ -1,53 +1,35 @@
-version: '3.8'
-
+version: "3.5"
 services:
-  elasticsearch:
-    image: elasticsearch:7.8.0
-    container_name: es
-    environment:
-      discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+  orion:
+    image: fiware/orion-ld
+    hostname: orion
+    container_name: fiware-orion
+    expose:
+      - "1026"
     ports:
-      - "9200:9200"
-      - "9300:9300"
-    healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
+      - "1026:1026"
+    depends_on:
+      - mongo-db
+    command: -dbhost mongo-db -logLevel DEBUG
+
+  mongo-db:
+    image: mongo:3.6
+    hostname: mongo-db
+    container_name: db-mongo
+    ports:
+      - "27017:27017" 
     networks:
-      - elastic
-  logstash:
-    image: logstash:7.8.0
-    container_name: log
-    environment:
-      discovery.seed_hosts: logstash
-      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
+      - default
+    command: --nojournal
     volumes:
-      - ./logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
-      - ./logstash/nginx.log:/home/nginx.log
+      - mongo-db:/data
+
+  nodered:
+    image: nodered/node-red
+    hostname: node-red
+    container_name: nr
     ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "5044:5044"
-      - "9600:9600"
-    depends_on:
-      - elasticsearch
-    networks:
-      - elastic
-    command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
-  kibana:
-    image: kibana:7.8.0
-    container_name: kib
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    networks:
-      - elastic
-networks:
-  elastic:
-    driver: bridge
-    # default MTU size in docker-compose is 1500
-    driver_opts:
-      com.docker.network.driver.mtu: 1440
+      - "1880:1880" 
+
+volumes:
+  mongo-db: ~
