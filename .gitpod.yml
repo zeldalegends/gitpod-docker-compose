@@ -1,6 +1,6 @@
 tasks:
   - init: docker-compose up -d
-  - command: echo "Docker compose running..." && docker exec fiware-orion-ld curl http://localhost:1026/version
+  - command: docker ps && docker exec fiware-orion-ld curl http://localhost:1026/version
 
 
 ports:
