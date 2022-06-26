@@ -2,6 +2,8 @@ services:
   mongo:
     image: mongo
     command: --nojournal
+    volumes:
+      - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   mongo-express:
     image: mongo-express
