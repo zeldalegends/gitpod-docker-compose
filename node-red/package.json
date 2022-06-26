@@ -4,7 +4,7 @@
     "description": "Low-code programming for event-driven applications",
     "author": "alerox",
     "scripts": {
-        "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
+        "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
     },
     "dependencies": {
         "node-red-contrib-fiware_official": "git+https://github.com/FIWARE/node-red-contrib-FIWARE_official.git#master",
