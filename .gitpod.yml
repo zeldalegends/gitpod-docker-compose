@@ -1,16 +1,15 @@
 tasks:
   - name: Shift+RunStop
+    before: |
+      @echo off
+      egrep '^(VERSION|NAME)=' /etc/os-release
     init: |
       docker-compose up -d
       gp sync-done inter
-  - name: Verify
     command: |
       gp sync-await inter
       docker ps
       docker exec orion-ld curl http://localhost:1026/version
-  - name: Terminal
-    init: egrep '^(VERSION|NAME)=' /etc/os-release
-    command: echo "READY"
 
 ports:
   - port: 1026
