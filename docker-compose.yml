@@ -1,12 +1,4 @@
 services:
-  orion:
-    image: fiware/orion:2.5.2
-    ports:
-      - 11026:1026
-    depends_on:
-      - mongo
-    command: -dbhost mongo
-
   orion-ld:
     image: fiware/orion-ld:0.6.1
     ports:
