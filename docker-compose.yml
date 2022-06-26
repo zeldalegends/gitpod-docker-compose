@@ -1,40 +1,39 @@
-version: "3"
+version: "3.8"
 
 services:
   orion:
-    image: fiware/orion:2.5.2
-    container_name: fiware-orion
-    ports:
-      - 11026:1026
-    depends_on:
-      - mongo
-    command: -dbhost mongo
-
-  orion-ld:
-    image: fiware/orion-ld:0.6.1
+    image: fiware/orion-ld
+    hostname: orion-ld
     container_name: fiware-orion-ld
     ports:
       - 1026:1026
     depends_on:
       - mongo
-    command: -dbhost mongo -db orionld
+    command: -dbhost mongo -db orionld -logLevel DEBUG
+    healthcheck:
+      test: curl --fail -s http://orion-ld:1026/version || exit 1
 
   mongo:
-    image: mongo:3.6
+    image: mongo #:4.2
+    hostname: mongo-db
     container_name: fiware-mongo
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
     command: --nojournal
     volumes:
       - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
-  node-red:
+  nodered:
     build: ./node-red
     image: fiware/node-red
+    hostname: node-red
     container_name: fiware-node-red
     ports:
       - 1880:1880
     depends_on:
       - orion
-      - orion-ld
 
 #################
 # ORIGINAL FILE #
