@@ -1,9 +1,5 @@
 tasks:
   - init: |
-      docker-compose pull
-      gp sync-done inter
-  - command: |
-      gp sync-await inter
       docker-compose up -d
       docker ps
       docker exec orion-ld curl http://localhost:1026/version
