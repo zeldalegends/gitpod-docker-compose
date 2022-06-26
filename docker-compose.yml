@@ -16,7 +16,8 @@ services:
       - 1026:1026
     depends_on:
       - mongo
-    command: -dbhost mongo -db orionld
+#   command: -dbhost mongo -db orion
+    command: -dbhost mongo 
   
   node-red:
     build: ./node-red
