@@ -1,38 +1,26 @@
-version: "3.9"
-
 services:
+  mongo:
+    image: mongo
+    command: --nojournal
 
-  orion-ld:
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+
+  orion:
     image: fiware/orion-ld
-    container_name: fiware-orion-ld
     ports:
       - 1026:1026
     depends_on:
       - mongo
     command: -dbhost mongo -db orionld
-
-  mongo:
-    image: mongo
-    container_name: fiware-mongo
-    command: --nojournal
-    volumes:
-      - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-frontend
-    ports:
-      - 8081:8081
-    depends_on:
-      - mongo
   
   node-red:
     build: ./node-red
-    image: fiware/node-red
-    container_name: fiware-node-red
     ports:
       - 1880:1880
 #   volumes:
 #     - ./node-red/data:/data
     depends_on:
-      - orion-ld
+      - orion
