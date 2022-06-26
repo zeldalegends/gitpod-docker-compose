@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  orion:
+    image: fiware/orion:2.5.2
+    container_name: fiware-orion
+    ports:
+      - 11026:1026
+    depends_on:
+      - mongo
+    command: -dbhost mongo
+
+  orion-ld:
+    image: fiware/orion-ld:0.6.1
+    container_name: fiware-orion-ld
+    ports:
+      - 1026:1026
+    depends_on:
+      - mongo
+    command: -dbhost mongo -db orionld
+
+  mongo:
+    image: mongo:3.6
+    container_name: fiware-mongo
+    command: --nojournal
+    volumes:
+      - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  node-red:
+    build: ./node-red
+    image: fiware/node-red
+    container_name: fiware-node-red
+    ports:
+      - 1880:1880
+#   volumes:
+#     - ./node-red/data:/data
+    depends_on:
+      - orion
+      - orion-ld
+
+#################
+# ORIGINAL FILE #
+#################
+
+  elasticsearch:
+    image: elasticsearch:7.8.0
+    container_name: es
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - elastic
+  logstash:
+    image: logstash:7.8.0
+    container_name: log
+    environment:
+      discovery.seed_hosts: logstash
+      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
+    volumes:
+      - ./logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
+      - ./logstash/nginx.log:/home/nginx.log
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "5044:5044"
+      - "9600:9600"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+    command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
+  kibana:
+    image: kibana:7.8.0
+    container_name: kib
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+networks:
+  elastic:
+    driver: bridge
+    # default MTU size in docker-compose is 1500
+    driver_opts:
+      com.docker.network.driver.mtu: 1440
