@@ -1,13 +1,10 @@
 tasks:
-  - name: Shift+RunStop
-    before: |
-      @echo off
-      egrep '^(VERSION|NAME)=' /etc/os-release
-    init: |
-      docker-compose up -d
+  - init: |
+      docker-compose pull
       gp sync-done inter
-    command: |
+  - command: |
       gp sync-await inter
+      docker.compose up -d
       docker ps
       docker exec orion-ld curl http://localhost:1026/version
 
