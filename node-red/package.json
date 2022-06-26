@@ -29,7 +29,6 @@
         }
     ],
     "dependencies": {
-        "node-red": "1.2.9",
         "node-red-contrib-fiware_official": "git+https://github.com/FIWARE/node-red-contrib-FIWARE_official.git#master",
         "passport-fiware-oauth": "^0.3.0"
     },
