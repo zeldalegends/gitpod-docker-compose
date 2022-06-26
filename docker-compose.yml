@@ -1,17 +1,23 @@
 services:
-  mongo:
+  mongo-db:
     image: mongo
+    container_name: mongo-db
+    hostname: mongo-db
     command: --nojournal
     volumes:
       - ./config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   mongo-express:
     image: mongo-express
+    container_name: mongo-express
+    hostname: mongo-express
     ports:
       - 8081:8081
 
-  orion:
+  orion-ld:
     image: fiware/orion-ld
+    container_name: orion-ld
+    hostname: orion-ld
     ports:
       - 1026:1026
     depends_on:
@@ -21,6 +27,8 @@ services:
   
   node-red:
     build: ./node-red
+    container_name: node-red
+    hostname: node-red
     ports:
       - 1880:1880
 #   volumes:
