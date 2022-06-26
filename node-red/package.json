@@ -7,7 +7,6 @@
         "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS",
     },
     "dependencies": {
-        "node-red": "latest",
         "node-red-contrib-fiware_official": "git+https://github.com/FIWARE/node-red-contrib-FIWARE_official.git#master",
         "node-red-dashboard": "latest",
         "node-red-node-ui-table": "latest",
