@@ -4,14 +4,13 @@ tasks:
   - command: |
       docker-compose up -d
       docker ps
-      docker exec orion-ld curl http://localhost:1026/version
 
 ports:
-  - port: 1026
+  - port: 9300
     onOpen: ignore
-  - port: 1880
+  - port: 5601
     onOpen: open-browser
-  - port: 8081
+  - port: 9200
     onOpen: open-preview
 
 vscode:
